@@ -1,0 +1,44 @@
+@JwtAuthDemo_HostAddress = http://localhost:5091
+
+### Login as Admin
+POST {{JwtAuthDemo_HostAddress}}/user/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+###
+
+### Login as User
+POST {{JwtAuthDemo_HostAddress}}/user/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "user",
+  "password": "user123"
+}
+
+###
+
+### Access Admin-only endpoint (replace TOKEN with actual JWT)
+GET {{JwtAuthDemo_HostAddress}}/roletest/admin
+Authorization: Bearer TOKEN
+Accept: application/json
+
+###
+
+### Access User-only endpoint (replace TOKEN with actual JWT)
+GET {{JwtAuthDemo_HostAddress}}/roletest/user
+Authorization: Bearer TOKEN
+Accept: application/json
+
+###
+
+### Access Common endpoint (Admin or User)
+GET {{JwtAuthDemo_HostAddress}}/roletest/common
+Authorization: Bearer TOKEN
+Accept: application/json
