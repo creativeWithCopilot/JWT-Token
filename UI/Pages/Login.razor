@@ -1,0 +1,37 @@
+@page "/login"
+@inject AuthService AuthService // Injects the AuthService so we can call LoginAsync
+@inject NavigationManager Nav // Injects NavigationManager to navigate to the profile page on successful login
+@using JwtAuthDemoUI.Services // Brings in the namespace for AuthService
+
+<h3>Login</h3>
+<!-- Input fields bound to username and password variables -->
+<input @bind="username" placeholder="Username" />
+<input @bind="password" type="password" placeholder="Password" />
+<!-- Button triggers HandleLogin method -->
+<button @onclick="HandleLogin">Login</button>
+<!-- Show error message if login fails -->
+@if (errorMessage != null)
+{
+    <p style="color:red">@errorMessage</p>
+}
+
+@code {
+    // Local variables bound to input fields
+    private string username;
+    private string password;
+    private string errorMessage; // Holds error message if login fails
+
+    // Handles the login process
+    private async Task HandleLogin() 
+    {
+        var success = await AuthService.LoginAsync(username, password); // Calls AuthService.LoginAsync with username and password.
+        if (success)
+        {
+            Nav.NavigateTo("/profile"); // If login is successful, navigate to the profile page.
+        }
+        else
+        {
+            errorMessage = "Invalid credentials"; // If login fails, set the error message to inform the user.
+        }
+    }
+}

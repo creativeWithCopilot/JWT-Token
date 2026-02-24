@@ -1,0 +1,32 @@
+@page "/common"
+@inject HttpClient Http // Injects HttpClient to call backend API
+@using JwtAuthDemoUI.Models // Brings in the namespace for RoleTestMessage model
+
+<h3>Common Page</h3>
+<!-- Show loading message until data is fetched -->
+@if (message == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <!-- Display the message returned from the backend -->
+    <p>@message</p>
+}
+
+@code {
+    private string message; // Holds the message returned from the backend API
+
+    protected override async Task OnInitializedAsync() // Lifecycle method called when the component is initialized.
+    {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<RoleTestMessage>("/roletest/common"); // Call backend endpoint accessible to both User and Admin roles
+            message = response.Message; // Store the message for display
+        }
+        catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}"; // If an error occurs (e.g., unauthorized), show error details instead of crashing
+        }
+    }
+}

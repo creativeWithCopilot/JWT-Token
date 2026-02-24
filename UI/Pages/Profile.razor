@@ -1,0 +1,32 @@
+@page "/profile"
+@inject HttpClient Http // Injects HttpClient to call backend API
+@using JwtAuthDemoUI.Models // Brings in the namespace for ProfileResponse model
+
+<h3>User Profile</h3>
+<!-- Show loading message until profile data is fetched -->
+@if (profile == null)
+{
+    <p>Loading...</p>
+}
+else 
+{
+    <!-- Display profile information once loaded -->
+    <p><strong>Username:</strong> @profile.Username</p>
+    <p><strong>Role:</strong> @profile.Role</p>
+}
+
+@code {
+    private ProfileResponse profile; // Holds the profile data returned from the backend
+
+    protected override async Task OnInitializedAsync() // Lifecycle method called when the component is initialized.
+    {
+        try
+        {
+            profile = await Http.GetFromJsonAsync<ProfileResponse>("/roletest/profile"); // Call backend endpoint to get profile info
+        }
+        catch (Exception ex)
+        {
+            profile = new ProfileResponse { Username = "Error", Role = ex.Message }; // If an error occurs, show error details instead of crashing
+        }
+    }
+}
